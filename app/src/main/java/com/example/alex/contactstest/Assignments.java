@@ -22,6 +22,8 @@ public class Assignments extends AppCompatActivity {
     int course;
     AssignmentAdapter mAdapter;
     List<Assignment> assignmentList;
+    CourseDBHelper dbHelper;
+    Cursor nameRes;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,7 +31,10 @@ public class Assignments extends AppCompatActivity {
         setContentView(R.layout.activity_das_list);
         Intent intent = getIntent();
         course = intent.getIntExtra(DasList.EXTRA_COURSE, 1);
-        setTitle("Assignments for " + course);
+        dbHelper = new CourseDBHelper(this);
+        Cursor res = dbHelper.getCourse(course);
+        res.moveToFirst();
+        setTitle("Assignments for " + res.getString(res.getColumnIndex(dbHelper.COURSES_COLUMN_NAME)));
     }
 
     public void onResume() {
@@ -40,7 +45,6 @@ public class Assignments extends AppCompatActivity {
         //Toast.makeText(DasList.this, Arrays.toString(classFileList), Toast.LENGTH_LONG).show();
 
         assignmentList = new ArrayList<>();
-        CourseDBHelper dbHelper = new CourseDBHelper(this);
         Cursor res = dbHelper.getCourseAssignments(course);
         res.moveToFirst();
         Toast.makeText(this, "RES COUNT " + res.getCount(), Toast.LENGTH_LONG).show();
