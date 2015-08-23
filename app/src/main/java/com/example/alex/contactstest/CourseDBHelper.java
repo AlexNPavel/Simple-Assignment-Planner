@@ -184,38 +184,33 @@ public class CourseDBHelper extends SQLiteOpenHelper{
 
     public Cursor getCourses() {
         SQLiteDatabase db = this.getReadableDatabase();
-        Cursor res =  db.rawQuery("select * from " + COURSES_TABLE_NAME, null );
-        return res;
+        return db.rawQuery("select * from " + COURSES_TABLE_NAME, null );
     }
 
     public Cursor getCourse(int id) {
         SQLiteDatabase db = this.getReadableDatabase();
-        Cursor res =  db.rawQuery("select * from " + COURSES_TABLE_NAME + " where " +
+        return db.rawQuery("select * from " + COURSES_TABLE_NAME + " where " +
                 COURSES_COLUMN_ID + EQUALS + id + ";", null );
-        return res;
     }
 
     public Cursor getAssignment(int id) {
         SQLiteDatabase db = this.getReadableDatabase();
-        Cursor res =  db.rawQuery("select * from " + ASSIGN_TABLE_NAME + " where " +
+        return db.rawQuery("select * from " + ASSIGN_TABLE_NAME + " where " +
                 ASSIGN_COLUMN_ID + EQUALS + id + ";", null );
-        return res;
     }
 
     public Cursor getAssignments() {
         SQLiteDatabase db = this.getReadableDatabase();
-        Cursor res =  db.rawQuery("select * from " + ASSIGN_TABLE_NAME, null );
-        return res;
+        return db.rawQuery("select * from " + ASSIGN_TABLE_NAME, null );
     }
 
     public Cursor getCourseAssignments(Integer courseID) {
         SQLiteDatabase db = this.getReadableDatabase();
-        Cursor res = db.rawQuery("select " + LINK_ASSIGN_ID + " from " +
+        return db.rawQuery("select " + LINK_ASSIGN_ID + " from " +
                 LINK_TABLE_NAME + COMMA_SEP + COURSES_TABLE_NAME + COMMA_SEP + ASSIGN_TABLE_NAME + " where " +
                 COURSES_TABLE_NAME + DOT + COURSES_COLUMN_ID + EQUALS + Integer.toString(courseID) + AND +
                 COURSES_TABLE_NAME + DOT + COURSES_COLUMN_ID + EQUALS + LINK_TABLE_NAME + DOT + LINK_COURSES_ID + AND +
                 ASSIGN_TABLE_NAME + DOT + ASSIGN_COLUMN_ID + EQUALS + LINK_TABLE_NAME + DOT + LINK_ASSIGN_ID, null);
-        return res;
     }
 
     @Override
