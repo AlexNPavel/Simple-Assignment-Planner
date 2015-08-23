@@ -59,7 +59,7 @@ public class Assignments extends AppCompatActivity {
         lv.setAdapter(mAdapter);
 
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fabbutton);
+        //FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fabbutton);
 
         lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
