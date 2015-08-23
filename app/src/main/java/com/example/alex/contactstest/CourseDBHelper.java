@@ -184,7 +184,7 @@ public class CourseDBHelper extends SQLiteOpenHelper{
 
     public Cursor getCourses() {
         SQLiteDatabase db = this.getReadableDatabase();
-        return db.rawQuery("select * from " + COURSES_TABLE_NAME, null );
+        return db.rawQuery("select * from " + COURSES_TABLE_NAME, null);
     }
 
     public Cursor getCourse(int id) {
@@ -202,6 +202,41 @@ public class CourseDBHelper extends SQLiteOpenHelper{
     public Cursor getAssignments() {
         SQLiteDatabase db = this.getReadableDatabase();
         return db.rawQuery("select * from " + ASSIGN_TABLE_NAME, null );
+    }
+
+    public boolean deleteAssignment(int assignID) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        String whereClause = LINK_ASSIGN_ID + "=?";
+        String[] whereArgs = new String[] { String.valueOf(assignID) };
+        db.delete(LINK_TABLE_NAME, whereClause, whereArgs);
+        whereClause = ASSIGN_COLUMN_ID + "=?";
+        whereArgs = new String[] { String.valueOf(assignID) };
+        db.delete(ASSIGN_TABLE_NAME, whereClause, whereArgs);
+        return true;
+    }
+
+    private boolean deleteAssignment(int assignID, SQLiteDatabase db) {
+        String whereClause = LINK_ASSIGN_ID + "=?";
+        String[] whereArgs = new String[] { String.valueOf(assignID) };
+        db.delete(LINK_TABLE_NAME, whereClause, whereArgs);
+        whereClause = ASSIGN_COLUMN_ID + "=?";
+        whereArgs = new String[] { String.valueOf(assignID) };
+        db.delete(ASSIGN_TABLE_NAME, whereClause, whereArgs);
+        return true;
+    }
+
+    public boolean deleteCourse(int courseID) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        Cursor res = getCourseAssignments(courseID);
+        res.moveToFirst();
+        for (int i = 0; i < res.getCount(); i++) {
+            deleteAssignment(res.getInt(res.getColumnIndex(CourseDBHelper.LINK_ASSIGN_ID)), db);
+            res.moveToNext();
+        }
+        String whereClause = COURSES_COLUMN_ID + "=?";
+        String[] whereArgs = new String[] { String.valueOf(courseID) };
+        db.delete(COURSES_TABLE_NAME, whereClause, whereArgs);
+        return true;
     }
 
     public Cursor getCourseAssignments(Integer courseID) {

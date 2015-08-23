@@ -25,6 +25,7 @@ public class DasList extends AppCompatActivity {
     CourseAdapter mAdapter;
     List<Course> courseList;
     Context context = this;
+    CourseDBHelper dbHelper;
     public final static String EXTRA_COURSE = "com.example.alex.contactstest.COURSE";
 
     @Override
@@ -53,7 +54,7 @@ public class DasList extends AppCompatActivity {
 
         //Toast.makeText(DasList.this, "In IF", Toast.LENGTH_LONG).show();
         courseList = new ArrayList<>();
-        CourseDBHelper dbHelper = new CourseDBHelper(this);
+        dbHelper = new CourseDBHelper(this);
         Cursor res = dbHelper.getCourses();
         res.moveToFirst();
         //Toast.makeText(this, "RES COUNT " + res.getCount(), Toast.LENGTH_LONG).show();
@@ -128,21 +129,15 @@ public class DasList extends AppCompatActivity {
             AdapterContextMenuInfo aInfo = (AdapterContextMenuInfo) item.getMenuInfo();
             Context context = this;
             String path = context.getFilesDir().getAbsolutePath();
-            File folderToDel = new File (path + "/" + courseList.get(aInfo.position).getName());
-            String[] courseFoldList = folderToDel.list();
-            for (String thing : courseFoldList) {
-                (new File(path + "/" + courseList.get(aInfo.position).getName() + "/" + thing)).delete();
-            }
-            boolean folderDeleted = folderToDel.delete();
-            if (folderDeleted) {
+            int removalID = courseList.get(aInfo.position).getID();
+            boolean deleted = dbHelper.deleteCourse(removalID);
+            if (deleted) {
                 Toast.makeText(this, "Deleted", Toast.LENGTH_SHORT).show();
             }
             else {
                 Toast.makeText(this, "Failed to delete", Toast.LENGTH_SHORT).show();
             }
-            System.out.println("Going to run onResume");
             onResume();
-            System.out.println("Ran onResume");
         }
         return true;
     }
