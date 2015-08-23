@@ -10,7 +10,7 @@ import android.widget.TextView;
 import java.util.List;
 
 /**
- * Created by alex on 6/25/15.
+ * Created by alex on 6/25/15. Add new header later.
  */
 public class CourseAdapter extends ArrayAdapter<Course> {
 

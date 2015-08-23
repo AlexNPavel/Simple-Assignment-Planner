@@ -3,7 +3,7 @@ package com.example.alex.contactstest;
 import android.database.Cursor;
 
 /**
- * Created by alex on 6/25/15.
+ * Created by alex on 6/25/15. Add new header later.
  */
 
 public class Course {
@@ -24,12 +24,12 @@ public class Course {
 
         res.moveToFirst();
 
-        name = res.getString(res.getColumnIndex(dbHelper.COURSES_COLUMN_NAME));
-        startHour = res.getInt(res.getColumnIndex(dbHelper.COURSES_COLUMN_START_HOUR));
-        startMin = res.getInt(res.getColumnIndex(dbHelper.COURSES_COLUMN_START_MIN));
-        endHour = res.getInt(res.getColumnIndex(dbHelper.COURSES_COLUMN_END_HOUR));
-        endMin = res.getInt(res.getColumnIndex(dbHelper.COURSES_COLUMN_END_MIN));
-        professor = res.getString(res.getColumnIndex(dbHelper.COURSES_COLUMN_PROF));
+        name = res.getString(res.getColumnIndex(CourseDBHelper.COURSES_COLUMN_NAME));
+        startHour = res.getInt(res.getColumnIndex(CourseDBHelper.COURSES_COLUMN_START_HOUR));
+        startMin = res.getInt(res.getColumnIndex(CourseDBHelper.COURSES_COLUMN_START_MIN));
+        endHour = res.getInt(res.getColumnIndex(CourseDBHelper.COURSES_COLUMN_END_HOUR));
+        endMin = res.getInt(res.getColumnIndex(CourseDBHelper.COURSES_COLUMN_END_MIN));
+        professor = res.getString(res.getColumnIndex(CourseDBHelper.COURSES_COLUMN_PROF));
     }
 
     public String getStartTime() {

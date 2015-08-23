@@ -3,7 +3,7 @@ package com.example.alex.contactstest;
 import android.database.Cursor;
 
 /**
- * Created by alex on 7/22/15.
+ * Created by alex on 7/22/15. Add new header later.
  */
 public class Assignment {
 
@@ -23,12 +23,12 @@ public class Assignment {
 
         res.moveToFirst();
 
-        name = res.getString(res.getColumnIndex(dbHelper.ASSIGN_COLUMN_NAME));
-        dueYear = res.getInt(res.getColumnIndex(dbHelper.ASSIGN_COLUMN_YEAR));
-        dueMonth = res.getInt(res.getColumnIndex(dbHelper.ASSIGN_COLUMN_MONTH));
-        dueDay = res.getInt(res.getColumnIndex(dbHelper.ASSIGN_COLUMN_DAY));
-        dueHour = res.getInt(res.getColumnIndex(dbHelper.ASSIGN_COLUMN_HOUR));
-        dueMin = res.getInt(res.getColumnIndex(dbHelper.ASSIGN_COLUMN_MIN));
+        name = res.getString(res.getColumnIndex(CourseDBHelper.ASSIGN_COLUMN_NAME));
+        dueYear = res.getInt(res.getColumnIndex(CourseDBHelper.ASSIGN_COLUMN_YEAR));
+        dueMonth = res.getInt(res.getColumnIndex(CourseDBHelper.ASSIGN_COLUMN_MONTH));
+        dueDay = res.getInt(res.getColumnIndex(CourseDBHelper.ASSIGN_COLUMN_DAY));
+        dueHour = res.getInt(res.getColumnIndex(CourseDBHelper.ASSIGN_COLUMN_HOUR));
+        dueMin = res.getInt(res.getColumnIndex(CourseDBHelper.ASSIGN_COLUMN_MIN));
 
     }
 
