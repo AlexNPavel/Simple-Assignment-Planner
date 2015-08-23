@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <item name="accentColor" type="color">#00CCFF</item>
+    <item name="accentColorDark" type="color">#0093B8</item>
+    <item name="actionbar_text" type="color">#FFFFFF</item>
+
+
+</resources>
