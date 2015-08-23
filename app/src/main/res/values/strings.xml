@@ -7,7 +7,7 @@
     <string name="new_assignment_name">Assignment Name</string>
     <string name="course_time">Click to set</string>
     <string name="course_end">End Time</string>
-    <string name="prof_name">Professor\'s Name</string>
+    <string name="prof_name">(Optional)</string>
     <string name="save">Save</string>
 
     <string name="hello_world">Hello world!</string>

@@ -62,9 +62,9 @@ public class DasList extends AppCompatActivity {
         CourseDBHelper dbHelper = new CourseDBHelper(this);
         Cursor res = dbHelper.getCourses();
         res.moveToFirst();
-        Toast.makeText(this, "RES COUNT " + res.getCount(), Toast.LENGTH_LONG).show();
+        //Toast.makeText(this, "RES COUNT " + res.getCount(), Toast.LENGTH_LONG).show();
         for (int i = 0; i < res.getCount(); i++) {
-            courseList.add(new Course(res.getInt(res.getColumnIndex(dbHelper.COURSES_COLUMN_ID)), dbHelper));
+            courseList.add(new Course(res.getInt(res.getColumnIndex(CourseDBHelper.COURSES_COLUMN_ID)), dbHelper));
             res.moveToNext();
         }
         // Create an empty adapter we will use to display the loaded data.

@@ -34,7 +34,7 @@ public class Assignments extends AppCompatActivity {
         dbHelper = new CourseDBHelper(this);
         Cursor res = dbHelper.getCourse(course);
         res.moveToFirst();
-        setTitle("Assignments for " + res.getString(res.getColumnIndex(dbHelper.COURSES_COLUMN_NAME)));
+        setTitle("Assignments for " + res.getString(res.getColumnIndex(CourseDBHelper.COURSES_COLUMN_NAME)));
     }
 
     public void onResume() {
@@ -47,9 +47,9 @@ public class Assignments extends AppCompatActivity {
         assignmentList = new ArrayList<>();
         Cursor res = dbHelper.getCourseAssignments(course);
         res.moveToFirst();
-        Toast.makeText(this, "RES COUNT " + res.getCount(), Toast.LENGTH_LONG).show();
+        //Toast.makeText(this, "RES COUNT " + res.getCount(), Toast.LENGTH_LONG).show();
         for (int i = 0; i < res.getCount(); i++) {
-            assignmentList.add(new Assignment(res.getInt(res.getColumnIndex(dbHelper.LINK_ASSIGN_ID)), dbHelper));
+            assignmentList.add(new Assignment(res.getInt(res.getColumnIndex(CourseDBHelper.LINK_ASSIGN_ID)), dbHelper));
             res.moveToNext();
         }
 

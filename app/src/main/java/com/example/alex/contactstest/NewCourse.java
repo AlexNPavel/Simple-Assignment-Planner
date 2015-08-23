@@ -120,14 +120,9 @@ public class NewCourse extends AppCompatActivity {
         else {
             String courseName = editText.getText().toString();
             editText = (EditText) findViewById(R.id.course_prof_name);
-            if (editText.getText().toString().matches("")) {
-                Toast.makeText(NewCourse.this, "Professor name cannot be blank", Toast.LENGTH_LONG).show();
-            }
-            else {
-                String prof_name = editText.getText().toString();
-                dbHelper.insertCourseData(courseName, startHour, startMin, endHour, endMin, prof_name);
-                finish();
-            }
+            String prof_name = editText.getText().toString();
+            dbHelper.insertCourseData(courseName, startHour, startMin, endHour, endMin, prof_name);
+            finish();
         }
     }
 }
