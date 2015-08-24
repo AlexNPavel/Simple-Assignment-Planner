@@ -4,6 +4,7 @@ import android.app.TimePickerDialog;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.text.format.DateFormat;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -46,14 +47,45 @@ public class NewCourse extends AppCompatActivity {
                     public void onTimeSet(TimePicker timePicker, int selectedHour, int selectedMinute) {
                         startHour = selectedHour;
                         startMin = selectedMinute;
-                        if (startMin < 10) {
-                            startTime.setText(selectedHour + ":0" + selectedMinute);
+                        if (!DateFormat.is24HourFormat(context)) {
+                            if (startHour == 12) {
+                                if (startMin < 10) {
+                                    startTime.setText("12:0" + selectedMinute + " PM");
+                                } else {
+                                    startTime.setText("12:" + selectedMinute + " PM");
+                                }
+                            }
+                            else if (startHour == 0) {
+                                if (startMin < 10) {
+                                    startTime.setText("12:0" + selectedMinute + " AM");
+                                } else {
+                                    startTime.setText("12:" + selectedMinute + " AM");
+                                }
+                            }
+                            else if (startHour > 12) {
+                                if (startMin < 10) {
+                                    startTime.setText((selectedHour - 12) + ":0" + selectedMinute + " PM");
+                                } else {
+                                    startTime.setText((selectedHour - 12) + ":" + selectedMinute + " PM");
+                                }
+                            }
+                            else {
+                                if (startMin < 10) {
+                                    startTime.setText(selectedHour + ":0" + selectedMinute + " AM");
+                                } else {
+                                    startTime.setText(selectedHour + ":" + selectedMinute + " AM");
+                                }
+                            }
                         }
                         else {
-                            startTime.setText(selectedHour + ":" + selectedMinute);
+                            if (startMin < 10) {
+                                startTime.setText(selectedHour + ":0" + selectedMinute);
+                            } else {
+                                startTime.setText(selectedHour + ":" + selectedMinute);
+                            }
                         }
                     }
-                }, startHour, startMin, true);//Yes 24 hour time
+                }, startHour, startMin, DateFormat.is24HourFormat(context));
                 mTimePicker.setTitle("Select Time");
                 mTimePicker.show();
             }
@@ -73,14 +105,45 @@ public class NewCourse extends AppCompatActivity {
                     public void onTimeSet(TimePicker timePicker, int selectedHour, int selectedMinute) {
                         endHour = selectedHour;
                         endMin = selectedMinute;
-                        if (endMin < 10) {
-                            endTime.setText(selectedHour + ":0" + selectedMinute);
+                        if (!DateFormat.is24HourFormat(context)) {
+                            if (endHour == 12) {
+                                if (endMin < 10) {
+                                    endTime.setText("12:0" + selectedMinute + " PM");
+                                } else {
+                                    endTime.setText("12:" + selectedMinute + " PM");
+                                }
+                            }
+                            else if (endHour == 0) {
+                                if (endMin < 10) {
+                                    endTime.setText("12:0" + selectedMinute + " AM");
+                                } else {
+                                    endTime.setText("12:" + selectedMinute + " AM");
+                                }
+                            }
+                            else if (endHour > 12) {
+                                if (endMin < 10) {
+                                    endTime.setText((selectedHour - 12) + ":0" + selectedMinute + " PM");
+                                } else {
+                                    endTime.setText((selectedHour - 12) + ":" + selectedMinute + " PM");
+                                }
+                            }
+                            else {
+                                if (endMin < 10) {
+                                    endTime.setText(selectedHour + ":0" + selectedMinute + " AM");
+                                } else {
+                                    endTime.setText(selectedHour + ":" + selectedMinute + " AM");
+                                }
+                            }
                         }
                         else {
-                            endTime.setText(selectedHour + ":" + selectedMinute);
+                            if (endMin < 10) {
+                                endTime.setText(selectedHour + ":0" + selectedMinute);
+                            } else {
+                                endTime.setText(selectedHour + ":" + selectedMinute);
+                            }
                         }
                     }
-                }, endHour, endMin, true);//Yes 24 hour time
+                }, endHour, endMin, DateFormat.is24HourFormat(context));
                 mTimePicker.setTitle("Select Time");
                 mTimePicker.show();
 

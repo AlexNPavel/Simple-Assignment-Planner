@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.view.ContextMenu;
 import android.view.Menu;
@@ -15,7 +14,6 @@ import android.widget.AdapterView.AdapterContextMenuInfo;
 import android.widget.ListView;
 import android.widget.Toast;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -59,7 +57,7 @@ public class DasList extends AppCompatActivity {
         res.moveToFirst();
         //Toast.makeText(this, "RES COUNT " + res.getCount(), Toast.LENGTH_LONG).show();
         for (int i = 0; i < res.getCount(); i++) {
-            courseList.add(new Course(res.getInt(res.getColumnIndex(CourseDBHelper.COURSES_COLUMN_ID)), dbHelper));
+            courseList.add(new Course(res.getInt(res.getColumnIndex(CourseDBHelper.COURSES_COLUMN_ID)), dbHelper, this));
             res.moveToNext();
         }
         // Create an empty adapter we will use to display the loaded data.

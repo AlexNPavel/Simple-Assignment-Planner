@@ -3,7 +3,6 @@ package com.example.alex.contactstest;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -49,7 +48,7 @@ public class Assignments extends AppCompatActivity {
         res.moveToFirst();
         //Toast.makeText(this, "RES COUNT " + res.getCount(), Toast.LENGTH_LONG).show();
         for (int i = 0; i < res.getCount(); i++) {
-            assignmentList.add(new Assignment(res.getInt(res.getColumnIndex(CourseDBHelper.LINK_ASSIGN_ID)), dbHelper));
+            assignmentList.add(new Assignment(res.getInt(res.getColumnIndex(CourseDBHelper.LINK_ASSIGN_ID)), dbHelper, this));
             res.moveToNext();
         }
 

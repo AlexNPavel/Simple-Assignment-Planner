@@ -1,6 +1,8 @@
 package com.example.alex.contactstest;
 
+import android.content.Context;
 import android.database.Cursor;
+import android.text.format.DateFormat;
 
 /**
  * Created by alex on 7/22/15. Add new header later.
@@ -14,9 +16,10 @@ public class Assignment {
     private final int dueHour;
     private final int dueMin;
     private final int ID;
+    private final Context context;
 
-    public Assignment(int assignID, CourseDBHelper dbHelper) {
-
+    public Assignment(int assignID, CourseDBHelper dbHelper, Context context) {
+        this.context = context;
         Cursor res = dbHelper.getAssignment(assignID);
 
         ID = assignID;
@@ -33,11 +36,42 @@ public class Assignment {
     }
 
     public String getDueTime() {
-        if (dueMin < 10) {
-            return (dueHour + ":0" + dueMin);
+        if (!DateFormat.is24HourFormat(context)) {
+            if (dueHour == 12) {
+                if (dueMin < 10) {
+                    return "12:0" + dueMin + " PM";
+                } else {
+                    return "12:" + dueMin + " PM";
+                }
+            }
+            else if (dueHour == 0) {
+                if (dueMin < 10) {
+                    return "12:0" + dueMin + " AM";
+                } else {
+                    return "12:" + dueMin + " AM";
+                }
+            }
+            else if (dueHour > 12) {
+                if (dueMin < 10) {
+                    return (dueHour - 12) + ":0" + dueMin + " PM";
+                } else {
+                    return (dueHour - 12) + ":" + dueMin + " PM";
+                }
+            }
+            else {
+                if (dueMin < 10) {
+                    return dueHour + ":0" + dueMin + " AM";
+                } else {
+                    return dueHour + ":" + dueMin + " AM";
+                }
+            }
         }
         else {
-            return (dueHour + ":" + dueMin);
+            if (dueMin < 10) {
+                return dueHour + ":0" + dueMin;
+            } else {
+                return dueHour + ":" + dueMin;
+            }
         }
     }
 

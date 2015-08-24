@@ -1,6 +1,8 @@
 package com.example.alex.contactstest;
 
+import android.content.Context;
 import android.database.Cursor;
+import android.text.format.DateFormat;
 
 /**
  * Created by alex on 6/25/15. Add new header later.
@@ -15,9 +17,10 @@ public class Course {
     private final int endHour;
     private final int endMin;
     private final String professor;
+    private final Context context;
 
-    public Course(int courseID, CourseDBHelper dbHelper) {
-
+    public Course(int courseID, CourseDBHelper dbHelper, Context context) {
+        this.context = context;
         Cursor res = dbHelper.getCourse(courseID);
 
         ID = courseID;
@@ -33,20 +36,82 @@ public class Course {
     }
 
     public String getStartTime() {
-        if (startMin < 10) {
-            return (startHour + ":0" + startMin);
+        if (!DateFormat.is24HourFormat(context)) {
+            if (startHour == 12) {
+                if (startMin < 10) {
+                    return "12:0" + startMin + " PM";
+                } else {
+                    return "12:" + startMin + " PM";
+                }
+            }
+            else if (startHour == 0) {
+                if (startMin < 10) {
+                    return "12:0" + startMin + " AM";
+                } else {
+                    return "12:" + startMin + " AM";
+                }
+            }
+            else if (startHour > 12) {
+                if (startMin < 10) {
+                    return (startHour - 12) + ":0" + startMin + " PM";
+                } else {
+                    return (startHour - 12) + ":" + startMin + " PM";
+                }
+            }
+            else {
+                if (startMin < 10) {
+                    return startHour + ":0" + startMin + " AM";
+                } else {
+                    return startHour + ":" + startMin + " AM";
+                }
+            }
         }
         else {
-            return (startHour + ":" + startMin);
+            if (startMin < 10) {
+                return startHour + ":0" + startMin;
+            } else {
+                return startHour + ":" + startMin;
+            }
         }
     }
 
     public String getEndTime() {
-        if (endMin < 10) {
-            return (endHour + ":0" + endMin);
+        if (!DateFormat.is24HourFormat(context)) {
+            if (endHour == 12) {
+                if (startMin < 10) {
+                    return "12:0" + endMin + " PM";
+                } else {
+                    return "12:" + endMin + " PM";
+                }
+            }
+            else if (endHour == 0) {
+                if (endMin < 10) {
+                    return "12:0" + endMin + " AM";
+                } else {
+                    return "12:" + endMin + " AM";
+                }
+            }
+            else if (endHour > 12) {
+                if (endMin < 10) {
+                    return (endHour - 12) + ":0" + endMin + " PM";
+                } else {
+                    return (endHour - 12) + ":" + endMin + " PM";
+                }
+            }
+            else {
+                if (endMin < 10) {
+                    return endHour + ":0" + endMin + " AM";
+                } else {
+                    return endHour + ":" + endMin + " AM";
+                }
+            }
         }
         else {
-            return (endHour + ":" + endMin);
+            if (endMin < 10) {
+                return endHour + ":0" + endMin;
+            } else {
+                return endHour + ":" + endMin;
+            }
         }
     }
 

@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.text.format.DateFormat;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -61,7 +62,7 @@ public class NewAssignment extends AppCompatActivity {
                             dueDate.setText(month + "/" + day + "/" + yearStr);
                         }
                     }
-                }, dueYear, dueMonth, dueDay);//Yes 24 hour time
+                }, dueYear, dueMonth, dueDay);
                 mTimePicker.setTitle("Select Date");
                 mTimePicker.show();
             }
@@ -81,13 +82,45 @@ public class NewAssignment extends AppCompatActivity {
                     public void onTimeSet(TimePicker timePicker, int selectedHour, int selectedMinute) {
                         dueHour = selectedHour;
                         dueMin = selectedMinute;
-                        if (dueMin < 10) {
-                            dueTime.setText(selectedHour + ":0" + selectedMinute);
-                        } else {
-                            dueTime.setText(selectedHour + ":" + selectedMinute);
+                        if (!DateFormat.is24HourFormat(context)) {
+                            if (dueHour == 12) {
+                                if (dueMin < 10) {
+                                    dueTime.setText("12:0" + selectedMinute + " PM");
+                                } else {
+                                    dueTime.setText("12:" + selectedMinute + " PM");
+                                }
+                            }
+                            else if (dueHour == 0) {
+                                if (dueMin < 10) {
+                                    dueTime.setText("12:0" + selectedMinute + " AM");
+                                } else {
+                                    dueTime.setText("12:" + selectedMinute + " AM");
+                                }
+                            }
+                            else if (dueHour > 12) {
+                                if (dueMin < 10) {
+                                    dueTime.setText((selectedHour - 12) + ":0" + selectedMinute + " PM");
+                                } else {
+                                    dueTime.setText((selectedHour - 12) + ":" + selectedMinute + " PM");
+                                }
+                            }
+                            else {
+                                if (dueMin < 10) {
+                                    dueTime.setText(selectedHour + ":0" + selectedMinute + " AM");
+                                } else {
+                                    dueTime.setText(selectedHour + ":" + selectedMinute + " AM");
+                                }
+                            }
+                        }
+                        else {
+                            if (dueMin < 10) {
+                                dueTime.setText(selectedHour + ":0" + selectedMinute);
+                            } else {
+                                dueTime.setText(selectedHour + ":" + selectedMinute);
+                            }
                         }
                     }
-                }, dueHour, dueMin, true);//Yes 24 hour time
+                }, dueHour, dueMin, DateFormat.is24HourFormat(context));
                 mTimePicker.setTitle("Select Time");
                 mTimePicker.show();
 
