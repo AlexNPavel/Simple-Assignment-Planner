@@ -113,20 +113,17 @@ public class DasList extends AppCompatActivity {
         AdapterContextMenuInfo aInfo = (AdapterContextMenuInfo) menuInfo;
 
         menu.setHeaderTitle("Options for " + courseList.get(aInfo.position).getName());
-        menu.add(1, 1, 1, "Details");
+        menu.add(1, 1, 1, "Edit");
         menu.add(1, 2, 2, "Delete");
     }
 
     @Override
     public boolean onContextItemSelected(MenuItem item) {
         String itemTitle = (String) item.getTitle();
-        // Implements our logic
-        if (itemTitle.equals("Details")) {
+        if (itemTitle.equals("Edit")) {
             Toast.makeText(this, "Item id [" + item.getItemId() + "]" + " and location: "+item.getGroupId(), Toast.LENGTH_SHORT).show();
         } else if (itemTitle.equals("Delete")){
             AdapterContextMenuInfo aInfo = (AdapterContextMenuInfo) item.getMenuInfo();
-            Context context = this;
-            String path = context.getFilesDir().getAbsolutePath();
             int removalID = courseList.get(aInfo.position).getID();
             boolean deleted = dbHelper.deleteCourse(removalID);
             if (deleted) {

@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.view.ContextMenu;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -92,6 +93,37 @@ public class Assignments extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onCreateContextMenu(ContextMenu menu, View v,
+                                    ContextMenu.ContextMenuInfo menuInfo) {
+
+        super.onCreateContextMenu(menu, v, menuInfo);
+        AdapterView.AdapterContextMenuInfo aInfo = (AdapterView.AdapterContextMenuInfo) menuInfo;
+
+        menu.setHeaderTitle("Options for " + assignmentList.get(aInfo.position).getName());
+        menu.add(1, 1, 1, "Edit");
+        menu.add(1, 2, 2, "Delete");
+    }
+
+    public boolean onContextItemSelected(MenuItem item) {
+        String itemTitle = (String) item.getTitle();
+        if (itemTitle.equals("Edit")) {
+            Toast.makeText(this, "Item id [" + item.getItemId() + "]" + " and location: "+item.getGroupId(), Toast.LENGTH_SHORT).show();
+        } else if (itemTitle.equals("Delete")){
+            AdapterView.AdapterContextMenuInfo aInfo = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
+            int removalID = assignmentList.get(aInfo.position).getID();
+            boolean deleted = dbHelper.deleteAssignment(removalID);
+            if (deleted) {
+                Toast.makeText(this, "Deleted", Toast.LENGTH_SHORT).show();
+            }
+            else {
+                Toast.makeText(this, "Failed to delete", Toast.LENGTH_SHORT).show();
+            }
+            onResume();
+        }
+        return true;
     }
 
     public void newCourse(View view) {
