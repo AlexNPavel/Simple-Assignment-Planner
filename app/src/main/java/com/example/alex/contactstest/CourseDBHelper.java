@@ -131,7 +131,7 @@ public class CourseDBHelper extends SQLiteOpenHelper{
         db.insert(ASSIGN_TABLE_NAME, null, contentValues);
         //db.close();
         //db = this.getWritableDatabase();
-        int assignID = getAssignID(name);
+        int assignID = getLatestAssignID();
         contentValues = new ContentValues();
         contentValues.put(LINK_COURSES_ID, courseID);
         contentValues.put(LINK_ASSIGN_ID, assignID);
@@ -139,8 +139,7 @@ public class CourseDBHelper extends SQLiteOpenHelper{
         return true;
     }
 
-    public boolean updateAssignmentData(String name, int dueYear, int dueMonth, int dueDay, int dueHour, int dueMin, int courseID) {
-        int assignID = getAssignID(name);
+    public boolean updateAssignmentData(String name, int dueYear, int dueMonth, int dueDay, int dueHour, int dueMin, int courseID, int assignID) {
         int linkID = getLinkID(courseID, assignID);
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
@@ -158,19 +157,10 @@ public class CourseDBHelper extends SQLiteOpenHelper{
         return true;
     }
 
-    private int getCourseID(String course) {
+    private int getLatestAssignID() {
         SQLiteDatabase db = this.getReadableDatabase();
-        Cursor res = db.rawQuery("select "+COURSES_COLUMN_ID + " from " + COURSES_TABLE_NAME +
-                                    " where " + COURSES_COLUMN_NAME + EQUALS + course, null);
-        res.moveToFirst();
-        return res.getInt(res.getColumnIndex(COURSES_COLUMN_ID));
-    }
-
-    private int getAssignID(String assignment) {
-        SQLiteDatabase db = this.getReadableDatabase();
-        Cursor res = db.rawQuery("select "+ASSIGN_COLUMN_ID + " from " + ASSIGN_TABLE_NAME +
-                " where " + ASSIGN_COLUMN_NAME + EQUALS + "\"" + assignment + "\"" + ";", null);
-        res.moveToFirst();
+        Cursor res = db.rawQuery("select "+ASSIGN_COLUMN_ID + " from " + ASSIGN_TABLE_NAME + ";", null);
+        res.moveToLast();
         return res.getInt(res.getColumnIndex(ASSIGN_COLUMN_ID));
     }
 
@@ -245,7 +235,7 @@ public class CourseDBHelper extends SQLiteOpenHelper{
                 LINK_TABLE_NAME + COMMA_SEP + COURSES_TABLE_NAME + COMMA_SEP + ASSIGN_TABLE_NAME + " where " +
                 COURSES_TABLE_NAME + DOT + COURSES_COLUMN_ID + EQUALS + Integer.toString(courseID) + AND +
                 COURSES_TABLE_NAME + DOT + COURSES_COLUMN_ID + EQUALS + LINK_TABLE_NAME + DOT + LINK_COURSES_ID + AND +
-                ASSIGN_TABLE_NAME + DOT + ASSIGN_COLUMN_ID + EQUALS + LINK_TABLE_NAME + DOT + LINK_ASSIGN_ID, null);
+                ASSIGN_TABLE_NAME + DOT + ASSIGN_COLUMN_ID + EQUALS + LINK_TABLE_NAME + DOT + LINK_ASSIGN_ID + ";", null);
     }
 
     @Override
