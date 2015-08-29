@@ -18,7 +18,6 @@ import java.util.List;
 
 public class Assignments extends AppCompatActivity {
 
-    public final static String EXTRA_COURSE = "com.example.alex.contactstest.assignement.COURSE";
     int course;
     AssignmentAdapter mAdapter;
     List<Assignment> assignmentList;
@@ -30,7 +29,7 @@ public class Assignments extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_das_list);
         Intent intent = getIntent();
-        course = intent.getIntExtra(DasList.EXTRA_COURSE, 1);
+        course = intent.getIntExtra("course", 1);
         dbHelper = new CourseDBHelper(this);
         Cursor res = dbHelper.getCourse(course);
         res.moveToFirst();
@@ -109,10 +108,14 @@ public class Assignments extends AppCompatActivity {
 
     public boolean onContextItemSelected(MenuItem item) {
         String itemTitle = (String) item.getTitle();
+        AdapterView.AdapterContextMenuInfo aInfo = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
         if (itemTitle.equals("Edit")) {
-            Toast.makeText(this, "Item id [" + item.getItemId() + "]" + " and location: "+item.getGroupId(), Toast.LENGTH_SHORT).show();
+            Intent intent = new Intent(this, NewAssignment.class);
+            intent.putExtra("isNew", false);
+            intent.putExtra("assignID", assignmentList.get(aInfo.position).getID());
+            intent.putExtra("courseID", course);
+            startActivity(intent);
         } else if (itemTitle.equals("Delete")){
-            AdapterView.AdapterContextMenuInfo aInfo = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
             int removalID = assignmentList.get(aInfo.position).getID();
             boolean deleted = dbHelper.deleteAssignment(removalID);
             if (deleted) {
@@ -128,9 +131,7 @@ public class Assignments extends AppCompatActivity {
 
     public void newCourse(View view) {
         Intent intent = new Intent(this, NewAssignment.class);
-        Intent currentIntent = getIntent();
-        int course = currentIntent.getIntExtra(DasList.EXTRA_COURSE, 1);
-        intent.putExtra(EXTRA_COURSE, course);
+        intent.putExtra("courseID", course);
         startActivity(intent);
     }
 }

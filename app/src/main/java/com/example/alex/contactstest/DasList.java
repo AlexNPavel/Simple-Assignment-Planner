@@ -24,7 +24,6 @@ public class DasList extends AppCompatActivity {
     List<Course> courseList;
     Context context = this;
     CourseDBHelper dbHelper;
-    public final static String EXTRA_COURSE = "com.example.alex.contactstest.COURSE";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -74,7 +73,7 @@ public class DasList extends AppCompatActivity {
                                     long id) {
                 Intent intent = new Intent(context, Assignments.class);
                 int courseChoice = courseList.get(position).getID();
-                intent.putExtra(EXTRA_COURSE, courseChoice);
+                intent.putExtra("course", courseChoice);
                 startActivity(intent);
             }
 
@@ -120,10 +119,13 @@ public class DasList extends AppCompatActivity {
     @Override
     public boolean onContextItemSelected(MenuItem item) {
         String itemTitle = (String) item.getTitle();
+        AdapterContextMenuInfo aInfo = (AdapterContextMenuInfo) item.getMenuInfo();
         if (itemTitle.equals("Edit")) {
-            Toast.makeText(this, "Item id [" + item.getItemId() + "]" + " and location: "+item.getGroupId(), Toast.LENGTH_SHORT).show();
+            Intent intent = new Intent(this, NewCourse.class);
+            intent.putExtra("isNew", false);
+            intent.putExtra("courseID", courseList.get(aInfo.position).getID());
+            startActivity(intent);
         } else if (itemTitle.equals("Delete")){
-            AdapterContextMenuInfo aInfo = (AdapterContextMenuInfo) item.getMenuInfo();
             int removalID = courseList.get(aInfo.position).getID();
             boolean deleted = dbHelper.deleteCourse(removalID);
             if (deleted) {

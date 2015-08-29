@@ -62,6 +62,7 @@ public class CourseDBHelper extends SQLiteOpenHelper{
             ASSIGN_COLUMN_MIN + INTEGER_TYPE +");";
 
     public static final String CREATE_LINK_ENTRIES = "CREATE TABLE IF NOT EXISTS " + LINK_TABLE_NAME + "(" +
+            LINK_COLUMN_ID + INTEGER_TYPE + " PRIMARY KEY," +
             LINK_COURSES_ID + INTEGER_TYPE + COMMA_SEP +
             LINK_ASSIGN_ID + INTEGER_TYPE + ");";
 
@@ -167,7 +168,7 @@ public class CourseDBHelper extends SQLiteOpenHelper{
     private int getLinkID (int courseID, int assignID) {
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor res = db.rawQuery("select " + LINK_COLUMN_ID + " from " + LINK_TABLE_NAME +
-                " where " + LINK_COURSES_ID + EQUALS + courseID + AND + LINK_ASSIGN_ID + EQUALS + assignID, null);
+                " where " + LINK_COURSES_ID + EQUALS + courseID + AND + LINK_ASSIGN_ID + EQUALS + assignID + ";", null);
         res.moveToFirst();
         return res.getInt(res.getColumnIndex(LINK_COLUMN_ID));
     }

@@ -4,6 +4,7 @@ import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.text.format.DateFormat;
@@ -28,27 +29,55 @@ public class NewAssignment extends AppCompatActivity {
     int dueDay;
     int dueYear;
     int courseID;
+    private int assignID;
+    String assignName;
+    boolean isNew;
     CourseDBHelper dbHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Intent currentIntent = getIntent();
-        courseID = currentIntent.getIntExtra(Assignments.EXTRA_COURSE, 1);
         setContentView(R.layout.activity_new_assignment);
+        Intent currentIntent = getIntent();
         dbHelper = new CourseDBHelper(this);
+        Cursor assignment= dbHelper.getAssignment(currentIntent.getIntExtra("assignID", 0));
+        assignment.moveToFirst();
+        isNew = currentIntent.getBooleanExtra("isNew", true);
+        if (!isNew) {
+            assignName = assignment.getString(assignment.getColumnIndex(CourseDBHelper.ASSIGN_COLUMN_NAME));
+            dueYear = assignment.getInt(assignment.getColumnIndex(CourseDBHelper.ASSIGN_COLUMN_YEAR));
+            dueMonth = assignment.getInt(assignment.getColumnIndex(CourseDBHelper.ASSIGN_COLUMN_MONTH));
+            dueDay = assignment.getInt(assignment.getColumnIndex(CourseDBHelper.ASSIGN_COLUMN_DAY));
+            dueHour = assignment.getInt(assignment.getColumnIndex(CourseDBHelper.ASSIGN_COLUMN_HOUR));
+            dueMin = assignment.getInt(assignment.getColumnIndex(CourseDBHelper.ASSIGN_COLUMN_MIN));
+            assignID = assignment.getInt(assignment.getColumnIndex(CourseDBHelper.ASSIGN_COLUMN_ID));
+        }
+        else {
+            assignID = 0;
+        }
+        courseID = currentIntent.getIntExtra("courseID", 1);
+        dbHelper = new CourseDBHelper(this);
+        final EditText name = (EditText) findViewById(R.id.assignment_name);
         final TextView dueDate = (TextView) findViewById(R.id.assignment_due_date);
         final TextView dueTime = (TextView) findViewById(R.id.assignment_due_time);
         final Context context = this;
+        if (!isNew) {
+            name.setText(assignName);
+            dueTime.setText(Format24Hour.format(dueHour, dueMin, context));
+            String yearStr = Integer.toString(dueYear);
+            yearStr = yearStr.substring((yearStr.length() - 2), yearStr.length());
+            dueDate.setText(dueMonth + "/" + dueDay + "/" + yearStr);
+        }
         dueDate.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View v) {
-                // TODO Auto-generated method stub
                 Calendar mcurrentTime = Calendar.getInstance();
-                dueDay = mcurrentTime.get(Calendar.DAY_OF_MONTH);
-                dueMonth = mcurrentTime.get(Calendar.MONTH);
-                dueYear = mcurrentTime.get(Calendar.YEAR);
+                if (isNew) {
+                    dueDay = mcurrentTime.get(Calendar.DAY_OF_MONTH);
+                    dueMonth = mcurrentTime.get(Calendar.MONTH);
+                    dueYear = mcurrentTime.get(Calendar.YEAR);
+                }
                 DatePickerDialog mTimePicker;
                 mTimePicker = new DatePickerDialog(context, new DatePickerDialog.OnDateSetListener() {
                     @Override
@@ -56,11 +85,9 @@ public class NewAssignment extends AppCompatActivity {
                         dueDay = day;
                         dueMonth = month;
                         dueYear = year;
-                        String yearStr = Integer.toString(year);
+                        String yearStr = Integer.toString(dueYear);
                         yearStr = yearStr.substring((yearStr.length() - 2), yearStr.length());
-                        if (dueMin < 10) {
-                            dueDate.setText(month + "/" + day + "/" + yearStr);
-                        }
+                        dueDate.setText(dueMonth + "/" + dueDay + "/" + yearStr);
                     }
                 }, dueYear, dueMonth, dueDay);
                 mTimePicker.setTitle("Select Date");
@@ -72,53 +99,18 @@ public class NewAssignment extends AppCompatActivity {
 
             @Override
             public void onClick(View v) {
-                // TODO Auto-generated method stub
                 Calendar mcurrentTime = Calendar.getInstance();
-                dueHour = mcurrentTime.get(Calendar.HOUR_OF_DAY);
-                dueMin = mcurrentTime.get(Calendar.MINUTE);
+                if (isNew) {
+                    dueHour = mcurrentTime.get(Calendar.HOUR_OF_DAY);
+                    dueMin = mcurrentTime.get(Calendar.MINUTE);
+                }
                 TimePickerDialog mTimePicker;
                 mTimePicker = new TimePickerDialog(context, new TimePickerDialog.OnTimeSetListener() {
                     @Override
                     public void onTimeSet(TimePicker timePicker, int selectedHour, int selectedMinute) {
                         dueHour = selectedHour;
                         dueMin = selectedMinute;
-                        if (!DateFormat.is24HourFormat(context)) {
-                            if (dueHour == 12) {
-                                if (dueMin < 10) {
-                                    dueTime.setText("12:0" + selectedMinute + " PM");
-                                } else {
-                                    dueTime.setText("12:" + selectedMinute + " PM");
-                                }
-                            }
-                            else if (dueHour == 0) {
-                                if (dueMin < 10) {
-                                    dueTime.setText("12:0" + selectedMinute + " AM");
-                                } else {
-                                    dueTime.setText("12:" + selectedMinute + " AM");
-                                }
-                            }
-                            else if (dueHour > 12) {
-                                if (dueMin < 10) {
-                                    dueTime.setText((selectedHour - 12) + ":0" + selectedMinute + " PM");
-                                } else {
-                                    dueTime.setText((selectedHour - 12) + ":" + selectedMinute + " PM");
-                                }
-                            }
-                            else {
-                                if (dueMin < 10) {
-                                    dueTime.setText(selectedHour + ":0" + selectedMinute + " AM");
-                                } else {
-                                    dueTime.setText(selectedHour + ":" + selectedMinute + " AM");
-                                }
-                            }
-                        }
-                        else {
-                            if (dueMin < 10) {
-                                dueTime.setText(selectedHour + ":0" + selectedMinute);
-                            } else {
-                                dueTime.setText(selectedHour + ":" + selectedMinute);
-                            }
-                        }
+                        dueTime.setText(Format24Hour.format(dueHour, dueMin, context));
                     }
                 }, dueHour, dueMin, DateFormat.is24HourFormat(context));
                 mTimePicker.setTitle("Select Time");
@@ -157,7 +149,12 @@ public class NewAssignment extends AppCompatActivity {
             Toast.makeText(NewAssignment.this, "Assignment name cannot be blank", Toast.LENGTH_LONG).show();
         }
         else {
-            dbHelper.insertAssignmentData(assignmentName, dueYear, dueMonth, dueDay, dueHour, dueMin, courseID);
+            if (isNew) {
+                dbHelper.insertAssignmentData(assignmentName, dueYear, dueMonth, dueDay, dueHour, dueMin, courseID);
+            }
+            else {
+                dbHelper.updateAssignmentData(assignmentName, dueYear, dueMonth, dueDay, dueHour, dueMin, courseID, assignID);
+            }
             finish();
         }
     }
