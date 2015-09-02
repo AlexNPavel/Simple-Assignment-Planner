@@ -41,6 +41,7 @@ public class NewCourse extends AppCompatActivity {
         course.moveToFirst();
         isNew = intent.getBooleanExtra("isNew", true);
         if (!isNew) {
+            setTitle("Edit Course");
             courseName = course.getString(course.getColumnIndex(CourseDBHelper.COURSES_COLUMN_NAME));
             startHour = course.getInt(course.getColumnIndex(CourseDBHelper.COURSES_COLUMN_START_HOUR));
             startMin = course.getInt(course.getColumnIndex(CourseDBHelper.COURSES_COLUMN_START_MIN));

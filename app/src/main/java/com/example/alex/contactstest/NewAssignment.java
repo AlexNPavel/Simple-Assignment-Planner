@@ -44,6 +44,7 @@ public class NewAssignment extends AppCompatActivity {
         assignment.moveToFirst();
         isNew = currentIntent.getBooleanExtra("isNew", true);
         if (!isNew) {
+            setTitle("Edit Assignment");
             assignName = assignment.getString(assignment.getColumnIndex(CourseDBHelper.ASSIGN_COLUMN_NAME));
             dueYear = assignment.getInt(assignment.getColumnIndex(CourseDBHelper.ASSIGN_COLUMN_YEAR));
             dueMonth = assignment.getInt(assignment.getColumnIndex(CourseDBHelper.ASSIGN_COLUMN_MONTH));
