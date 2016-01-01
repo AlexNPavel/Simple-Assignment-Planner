@@ -74,7 +74,7 @@ public class NewAssignment extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Calendar mcurrentTime = Calendar.getInstance();
-                boolean display = dueYear == 0;
+                boolean display = dueYear < 1000;
                 if (isNew) {
                         dueDay = mcurrentTime.get(Calendar.DAY_OF_MONTH);
                         //Months start at 0, so add 1 to month
