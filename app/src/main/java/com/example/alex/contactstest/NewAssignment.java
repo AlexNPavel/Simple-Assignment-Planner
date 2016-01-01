@@ -74,25 +74,32 @@ public class NewAssignment extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Calendar mcurrentTime = Calendar.getInstance();
+                boolean display = dueYear == 0;
                 if (isNew) {
-                    dueDay = mcurrentTime.get(Calendar.DAY_OF_MONTH);
-                    dueMonth = mcurrentTime.get(Calendar.MONTH);
-                    dueYear = mcurrentTime.get(Calendar.YEAR);
+                        dueDay = mcurrentTime.get(Calendar.DAY_OF_MONTH);
+                        //Months start at 0, so add 1 to month
+                        dueMonth = mcurrentTime.get(Calendar.MONTH) + 1;
+                        dueYear = mcurrentTime.get(Calendar.YEAR);
                 }
                 DatePickerDialog mTimePicker;
                 mTimePicker = new DatePickerDialog(context, new DatePickerDialog.OnDateSetListener() {
                     @Override
                     public void onDateSet(DatePicker datePicker, int year, int month, int day) {
                         dueDay = day;
-                        dueMonth = month;
+                        dueMonth = month + 1;
                         dueYear = year;
                         String yearStr = Integer.toString(dueYear);
                         yearStr = yearStr.substring((yearStr.length() - 2), yearStr.length());
                         dueDate.setText(dueMonth + "/" + dueDay + "/" + yearStr);
                     }
-                }, dueYear, dueMonth, dueDay);
+                }, dueYear, dueMonth - 1, dueDay);
                 mTimePicker.setTitle("Select Date");
                 mTimePicker.show();
+                if (display) {
+                    String yearStr = Integer.toString(dueYear);
+                    yearStr = yearStr.substring((yearStr.length() - 2), yearStr.length());
+                    dueDate.setText(dueMonth + "/" + dueDay + "/" + yearStr);
+                }
             }
         });
 
@@ -102,8 +109,15 @@ public class NewAssignment extends AppCompatActivity {
             public void onClick(View v) {
                 Calendar mcurrentTime = Calendar.getInstance();
                 if (isNew) {
-                    dueHour = mcurrentTime.get(Calendar.HOUR_OF_DAY);
-                    dueMin = mcurrentTime.get(Calendar.MINUTE);
+                    if (dueHour == 0 && dueMin == 0) {
+                        dueHour = mcurrentTime.get(Calendar.HOUR_OF_DAY);
+                        dueMin = mcurrentTime.get(Calendar.MINUTE);
+                        dueTime.setText(Format24Hour.format(dueHour, dueMin, context));
+                    }
+                    else {
+                        dueHour = mcurrentTime.get(Calendar.HOUR_OF_DAY);
+                        dueMin = mcurrentTime.get(Calendar.MINUTE);
+                    }
                 }
                 TimePickerDialog mTimePicker;
                 mTimePicker = new TimePickerDialog(context, new TimePickerDialog.OnTimeSetListener() {
@@ -148,6 +162,9 @@ public class NewAssignment extends AppCompatActivity {
         String assignmentName = editText.getText().toString();
         if (assignmentName.matches("")) {
             Toast.makeText(NewAssignment.this, "Assignment name cannot be blank", Toast.LENGTH_LONG).show();
+        }
+        else if (dueYear == 0) {
+            Toast.makeText(NewAssignment.this, "Due Date cannot be blank", Toast.LENGTH_LONG).show();
         }
         else {
             if (isNew) {
