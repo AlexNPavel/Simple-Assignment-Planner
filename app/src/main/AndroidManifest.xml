@@ -4,6 +4,7 @@
 
     <application
         android:allowBackup="true"
+        android:fullBackupContent="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:theme="@style/CustomActionBarTheme" >
@@ -28,11 +29,19 @@
         </activity>
         <activity
             android:name=".Assignments"
-            android:label="@string/title_activity_classes" >
+            android:label="@string/title_activity_classes"
+            android:parentActivityName=".DasList" >
+            <meta-data
+                    android:name="android.support.PARENT_ACTIVITY"
+                    android:value="com.example.alex.contactstest.DasList" />
         </activity>
         <activity
             android:name=".NewAssignment"
-            android:label="@string/title_activity_new_assignment" >
+            android:label="@string/title_activity_new_assignment"
+            android:parentActivityName=".Assignments" >
+            <meta-data
+                    android:name="android.support.PARENT_ACTIVITY"
+                    android:value="com.example.alex.contactstest.Assignments" />
         </activity>
     </application>
 
