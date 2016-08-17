@@ -1,6 +1,5 @@
-package com.example.alex.contactstest;
+package com.alexpavel.simpleassignmentplanner;
 
-import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
@@ -10,7 +9,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.AdapterView.AdapterContextMenuInfo;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -18,50 +16,45 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class DasList extends AppCompatActivity {
+public class Assignments extends AppCompatActivity {
 
-    CourseAdapter mAdapter;
-    List<Course> courseList;
-    Context context = this;
+    int course;
+    AssignmentAdapter mAdapter;
+    List<Assignment> assignmentList;
     CourseDBHelper dbHelper;
+    Cursor nameRes;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_das_list);
+        Intent intent = getIntent();
+        course = intent.getIntExtra("course", 1);
+        dbHelper = new CourseDBHelper(this);
+        Cursor res = dbHelper.getCourse(course);
+        res.moveToFirst();
+        setTitle("Assignments for " + res.getString(res.getColumnIndex(CourseDBHelper.COURSES_COLUMN_NAME)));
     }
 
-    @Override
     public void onResume() {
         super.onResume();
         setContentView(R.layout.activity_das_list);
         ListView lv = (ListView) findViewById(R.id.listView);
-        //Toast.makeText(DasList.this, Arrays.toString(courseFoldList), Toast.LENGTH_LONG).show();
 
-        // Create a progress bar to display while the list loads
-        //ProgressBar progressBar = new ProgressBar(this);
-        //progressBar.setLayoutParams(new LayoutParams(LayoutParams.WRAP_CONTENT,
-        //        LayoutParams.WRAP_CONTENT, Gravity.CENTER));
-        //progressBar.setIndeterminate(true);
-        //lv.setEmptyView(progressBar);
+        //Toast.makeText(DasList.this, Arrays.toString(classFileList), Toast.LENGTH_LONG).show();
 
-        // Must add the progress bar to the root of the layout
-        //ViewGroup root = (ViewGroup) findViewById(android.R.id.content);
-        //root.addView(progressBar);
-
-        //Toast.makeText(DasList.this, "In IF", Toast.LENGTH_LONG).show();
-        courseList = new ArrayList<>();
-        dbHelper = new CourseDBHelper(this);
-        Cursor res = dbHelper.getCourses();
+        assignmentList = new ArrayList<>();
+        Cursor res = dbHelper.getCourseAssignments(course);
         res.moveToFirst();
         //Toast.makeText(this, "RES COUNT " + res.getCount(), Toast.LENGTH_LONG).show();
         for (int i = 0; i < res.getCount(); i++) {
-            courseList.add(new Course(res.getInt(res.getColumnIndex(CourseDBHelper.COURSES_COLUMN_ID)), dbHelper, this));
+            assignmentList.add(new Assignment(res.getInt(res.getColumnIndex(CourseDBHelper.LINK_ASSIGN_ID)), dbHelper, this));
             res.moveToNext();
         }
+
         // Create an empty adapter we will use to display the loaded data.
         // We pass null for the cursor, then update it in onLoadFinished()
-        mAdapter = new CourseAdapter(this, courseList);
+        mAdapter = new AssignmentAdapter(this, assignmentList);
         lv.setAdapter(mAdapter);
 
 
@@ -71,10 +64,7 @@ public class DasList extends AppCompatActivity {
 
             public void onItemClick(AdapterView<?> parentAdapter, View view, int position,
                                     long id) {
-                Intent intent = new Intent(context, Assignments.class);
-                int courseChoice = courseList.get(position).getID();
-                intent.putExtra("course", courseChoice);
-                startActivity(intent);
+                Toast.makeText(Assignments.this, "Item with id [" + id + "] - Position [" + position + "]", Toast.LENGTH_SHORT).show();
             }
 
         });
@@ -85,7 +75,7 @@ public class DasList extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_das_list, menu);
+        getMenuInflater().inflate(R.menu.menu_classes, menu);
         return true;
     }
 
@@ -109,25 +99,25 @@ public class DasList extends AppCompatActivity {
                                     ContextMenu.ContextMenuInfo menuInfo) {
 
         super.onCreateContextMenu(menu, v, menuInfo);
-        AdapterContextMenuInfo aInfo = (AdapterContextMenuInfo) menuInfo;
+        AdapterView.AdapterContextMenuInfo aInfo = (AdapterView.AdapterContextMenuInfo) menuInfo;
 
-        menu.setHeaderTitle("Options for " + courseList.get(aInfo.position).getName());
+        menu.setHeaderTitle("Options for " + assignmentList.get(aInfo.position).getName());
         menu.add(1, 1, 1, "Edit");
         menu.add(1, 2, 2, "Delete");
     }
 
-    @Override
     public boolean onContextItemSelected(MenuItem item) {
         String itemTitle = (String) item.getTitle();
-        AdapterContextMenuInfo aInfo = (AdapterContextMenuInfo) item.getMenuInfo();
+        AdapterView.AdapterContextMenuInfo aInfo = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
         if (itemTitle.equals("Edit")) {
-            Intent intent = new Intent(this, NewCourse.class);
+            Intent intent = new Intent(this, NewAssignment.class);
             intent.putExtra("isNew", false);
-            intent.putExtra("courseID", courseList.get(aInfo.position).getID());
+            intent.putExtra("assignID", assignmentList.get(aInfo.position).getID());
+            intent.putExtra("courseID", course);
             startActivity(intent);
         } else if (itemTitle.equals("Delete")){
-            int removalID = courseList.get(aInfo.position).getID();
-            boolean deleted = dbHelper.deleteCourse(removalID);
+            int removalID = assignmentList.get(aInfo.position).getID();
+            boolean deleted = dbHelper.deleteAssignment(removalID);
             if (deleted) {
                 Toast.makeText(this, "Deleted", Toast.LENGTH_SHORT).show();
             }
@@ -139,11 +129,9 @@ public class DasList extends AppCompatActivity {
         return true;
     }
 
-
-
     public void newCourse(View view) {
-        Intent intent = new Intent(this, NewCourse.class);
+        Intent intent = new Intent(this, NewAssignment.class);
+        intent.putExtra("courseID", course);
         startActivity(intent);
     }
-
 }

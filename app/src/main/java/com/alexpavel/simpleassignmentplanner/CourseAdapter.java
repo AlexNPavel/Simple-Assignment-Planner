@@ -1,4 +1,4 @@
-package com.example.alex.contactstest;
+package com.alexpavel.simpleassignmentplanner;
 
 import android.content.Context;
 import android.view.LayoutInflater;

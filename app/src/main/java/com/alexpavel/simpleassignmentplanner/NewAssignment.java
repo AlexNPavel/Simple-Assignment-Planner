@@ -1,4 +1,4 @@
-package com.example.alex.contactstest;
+package com.alexpavel.simpleassignmentplanner;
 
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;

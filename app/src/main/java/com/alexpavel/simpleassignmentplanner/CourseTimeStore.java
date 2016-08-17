@@ -1,4 +1,4 @@
-package com.example.alex.contactstest;
+package com.alexpavel.simpleassignmentplanner;
 
 /**
  * Created by alex on 9/18/15.

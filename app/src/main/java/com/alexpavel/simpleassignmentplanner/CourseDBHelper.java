@@ -1,4 +1,4 @@
-package com.example.alex.contactstest;
+package com.alexpavel.simpleassignmentplanner;
 
 import android.content.ContentValues;
 import android.content.Context;
@@ -38,7 +38,7 @@ public class CourseDBHelper extends SQLiteOpenHelper{
 
     public static final String TIMES_TABLE_NAME = "link";
     public static final String TIMES_COLUMN_ID = "id";
-    public static final String TIMES_COLUMN_ASSIGN_ID = "assign_id";
+    public static final String TIMES_COLUMN_COURSE_ID = "course_id";
     public static final String TIMES_COLUMN_DOW = "dow";
     public static final String TIMES_COLUMN_SH = "sH";
     public static final String TIMES_COLUMN_SM = "sM";
@@ -78,7 +78,7 @@ public class CourseDBHelper extends SQLiteOpenHelper{
 
     public static final String CREATE_TIMES_ENTRIES = "CREATE TABLE IF NOT EXISTS " + TIMES_TABLE_NAME + "(" +
             TIMES_COLUMN_ID + INTEGER_TYPE + " PRIMARY KEY," +
-            TIMES_COLUMN_ASSIGN_ID + INTEGER_TYPE + COMMA_SEP +
+            TIMES_COLUMN_COURSE_ID + INTEGER_TYPE + COMMA_SEP +
             TIMES_COLUMN_DOW + INTEGER_TYPE + COMMA_SEP +
             TIMES_COLUMN_SH + INTEGER_TYPE + COMMA_SEP +
             TIMES_COLUMN_SM + INTEGER_TYPE + COMMA_SEP +
@@ -182,10 +182,10 @@ public class CourseDBHelper extends SQLiteOpenHelper{
         return true;
     }
 
-    public void insertTimeData(int assignID, int dow, int startHour, int startMin, int endHour, int endMin) {
+    public void insertTimeData(int courseID, int dow, int startHour, int startMin, int endHour, int endMin) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
-        contentValues.put(TIMES_COLUMN_ASSIGN_ID, assignID);
+        contentValues.put(TIMES_COLUMN_COURSE_ID, courseID);
         contentValues.put(TIMES_COLUMN_DOW, dow);
         contentValues.put(TIMES_COLUMN_SH, startHour);
         contentValues.put(TIMES_COLUMN_SM, startMin);
@@ -193,6 +193,21 @@ public class CourseDBHelper extends SQLiteOpenHelper{
         contentValues.put(TIMES_COLUMN_EM, endMin);
         db.insert(TIMES_TABLE_NAME, null, contentValues);
         db.close();
+    }
+
+    public Cursor getTimeData(int ID) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        return db.rawQuery("select * from " + TIMES_TABLE_NAME + " where " +
+                TIMES_COLUMN_ID + EQUALS + ID + ";", null );
+    }
+
+    public Cursor getCourseTimeData(int ID) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        return db.rawQuery("select " + TIMES_COLUMN_ID+ " from " +
+                TIMES_TABLE_NAME + COMMA_SEP + COURSES_TABLE_NAME + " where " +
+                COURSES_TABLE_NAME + DOT + COURSES_COLUMN_ID + EQUALS + Integer.toString(ID) + AND +
+                COURSES_TABLE_NAME + DOT + COURSES_COLUMN_ID + EQUALS + TIMES_TABLE_NAME + DOT + TIMES_COLUMN_COURSE_ID +
+                ";", null);
     }
 
     public void updateTimeData(int ID, int dow, int startHour, int startMin, int endHour, int endMin) {
@@ -213,6 +228,13 @@ public class CourseDBHelper extends SQLiteOpenHelper{
         String[] whereArgs = new String[] { String.valueOf(ID) };
         db.delete(TIMES_TABLE_NAME, whereClause, whereArgs);
         db.close();
+    }
+
+    public int getLatestCourseID() {
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor res = db.rawQuery("select "+COURSES_COLUMN_ID + " from " + COURSES_TABLE_NAME + ";", null);
+        res.moveToLast();
+        return res.getInt(res.getColumnIndex(COURSES_COLUMN_ID));
     }
 
     private int getLatestAssignID() {

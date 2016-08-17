@@ -1,4 +1,4 @@
-package com.example.alex.contactstest;
+package com.alexpavel.simpleassignmentplanner;
 
 import android.app.TimePickerDialog;
 import android.content.Context;
@@ -12,6 +12,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
@@ -116,6 +117,9 @@ public class NewCourse extends AppCompatActivity {
                 mTimePicker.show();
             }
         });
+        findViewById(R.id.course_times).setVisibility(View.INVISIBLE);
+        findViewById(R.id.prof_layout).setVisibility(View.INVISIBLE);
+        findViewById(R.id.hr).setVisibility(View.INVISIBLE);
         ImageView addTimes= (ImageView) findViewById(R.id.add_course_times);
         addTimes.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
@@ -172,9 +176,18 @@ public class NewCourse extends AppCompatActivity {
             profName = editText.getText().toString();
             if (isNew) {
                 dbHelper.insertCourseData(courseName, startHour, startMin, endHour, endMin, profName);
+                int id = dbHelper.getLatestCourseID();
+                for (CourseTimeLayoutLinker cl : layouts) {
+                    dbHelper.insertTimeData(id, 0, cl.getStore().getStartHour(), cl.getStore().getStartMin(),
+                            cl.getStore().getEndHour(), cl.getStore().getEndMin());
+                }
             }
             else {
                 dbHelper.updateCourseData(id, courseName, startHour, startMin, endHour, endMin, profName);
+                for (CourseTimeLayoutLinker cl : layouts) {
+                    dbHelper.insertTimeData(id, 0, cl.getStore().getStartHour(), cl.getStore().getStartMin(),
+                            cl.getStore().getEndHour(), cl.getStore().getEndMin());
+                }
             }
             finish();
         }
