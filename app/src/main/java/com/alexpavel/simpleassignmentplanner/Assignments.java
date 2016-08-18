@@ -59,7 +59,7 @@ public class Assignments extends AppCompatActivity {
 
 
         //FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fabbutton);
-
+        /*
         lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
             public void onItemClick(AdapterView<?> parentAdapter, View view, int position,
@@ -68,6 +68,7 @@ public class Assignments extends AppCompatActivity {
             }
 
         });
+        */
 
         registerForContextMenu(lv);
     }
