@@ -293,7 +293,6 @@ public class CourseDBHelper extends SQLiteOpenHelper{
         whereClause = ASSIGN_COLUMN_ID + "=?";
         whereArgs = new String[] { String.valueOf(assignID) };
         db.delete(ASSIGN_TABLE_NAME, whereClause, whereArgs);
-        db.close();
         return true;
     }
 
