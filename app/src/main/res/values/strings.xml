@@ -6,11 +6,9 @@
     <string name="new_course_name">Course Name</string>
     <string name="new_assignment_name">Assignment Name</string>
     <string name="course_time">Click to set</string>
-    <string name="course_end">End Time</string>
     <string name="prof_name">(Optional)</string>
     <string name="save">Save</string>
 
-    <string name="hello_world">Hello world!</string>
     <string name="title_activity_classes">Assignments</string>
     <string name="title_activity_new_assignment">Add A New Assignment</string>
 </resources>

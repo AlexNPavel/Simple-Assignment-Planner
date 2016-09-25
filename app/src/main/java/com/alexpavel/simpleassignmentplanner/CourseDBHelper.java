@@ -234,14 +234,18 @@ public class CourseDBHelper extends SQLiteOpenHelper{
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor res = db.rawQuery("select "+COURSES_COLUMN_ID + " from " + COURSES_TABLE_NAME + ";", null);
         res.moveToLast();
-        return res.getInt(res.getColumnIndex(COURSES_COLUMN_ID));
+        int ret = res.getInt(res.getColumnIndex(COURSES_COLUMN_ID));
+        res.close();
+        return ret;
     }
 
     private int getLatestAssignID() {
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor res = db.rawQuery("select "+ASSIGN_COLUMN_ID + " from " + ASSIGN_TABLE_NAME + ";", null);
         res.moveToLast();
-        return res.getInt(res.getColumnIndex(ASSIGN_COLUMN_ID));
+        int ret = res.getInt(res.getColumnIndex(ASSIGN_COLUMN_ID));
+        res.close();
+        return ret;
     }
 
     private int getLinkID (int courseID, int assignID) {
@@ -249,7 +253,9 @@ public class CourseDBHelper extends SQLiteOpenHelper{
         Cursor res = db.rawQuery("select " + LINK_COLUMN_ID + " from " + LINK_TABLE_NAME +
                 " where " + LINK_COURSES_ID + EQUALS + courseID + AND + LINK_ASSIGN_ID + EQUALS + assignID + ";", null);
         res.moveToFirst();
-        return res.getInt(res.getColumnIndex(LINK_COLUMN_ID));
+        int ret = res.getInt(res.getColumnIndex(LINK_COLUMN_ID));
+        res.close();
+        return ret;
     }
 
     public Cursor getCourses() {
